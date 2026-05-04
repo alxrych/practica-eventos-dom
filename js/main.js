@@ -3,32 +3,32 @@
  */
 const categoriesData = {
     mar: [
-        { src: 'assets/img/viajes/viajes-1.jpg', title: 'Chica en una tumbona' },
-        { src: 'assets/img/viajes/viajes-2.jpg', title: 'Resort en la playa' },
-        { src: 'assets/img/viajes/viajes-6.jpg', title: 'Senda costera' }
+        { id:1, src: 'assets/img/viajes/viajes-1.jpg', title: 'Chica en una tumbona' },
+        { id:2, src: 'assets/img/viajes/viajes-2.jpg', title: 'Resort en la playa' },
+        { id:3, src: 'assets/img/viajes/viajes-6.jpg', title: 'Senda costera' }
 
     ],
     edificio: [
-        { src: 'assets/img/viajes/viajes-2.jpg', title: 'Resort en la playa' },
-        { src: 'assets/img/viajes/viajes-4.jpg', title: 'Plaza de España (Sevilla)' },
-        { src: 'assets/img/viajes/viajes-5.jpg', title: 'Puente de plaza de España' },
-        { src: 'assets/img/viajes/viajes-7.jpg', title: 'Castillo' }
+        { id:4, src: 'assets/img/viajes/viajes-2.jpg', title: 'Resort en la playa' },
+        { id:5, src: 'assets/img/viajes/viajes-4.jpg', title: 'Plaza de España (Sevilla)' },
+        { id:6, src: 'assets/img/viajes/viajes-5.jpg', title: 'Puente de plaza de España' },
+        { id:7, src: 'assets/img/viajes/viajes-7.jpg', title: 'Castillo' }
 
 
     ],
     señales: [
-        { src: 'assets/img/viajes/viajes-3.jpg', title: 'Cruces de caminos' }
+        { id:8, src: 'assets/img/viajes/viajes-3.jpg', title: 'Cruces de caminos' }
     ],
     arena: [
-        { src: 'assets/img/viajes/viajes-1.jpg', title: 'Chica en una tumbona' }
+        { id:9, src: 'assets/img/viajes/viajes-1.jpg', title: 'Chica en una tumbona' }
     ],
     cosa: [
-        { src: 'assets/img/viajes/viajes-2.jpg', title: 'Resort en la playa' },
-        { src: 'assets/img/viajes/viajes-3.jpg', title: 'Cruces de caminos' },
-        { src: 'assets/img/viajes/viajes-5.jpg', title: 'Puente de plaza de España' },
-        { src: 'assets/img/viajes/viajes-4.jpg', title: 'Plaza de España (Sevilla)' },
-        { src: 'assets/img/viajes/viajes-6.jpg', title: 'Senda costera' },
-        { src: 'assets/img/viajes/viajes-7.jpg', title: 'Castillo' }
+        { id: 10, src: 'assets/img/viajes/viajes-2.jpg', title: 'Resort en la playa' },
+        { id: 11, src: 'assets/img/viajes/viajes-3.jpg', title: 'Cruces de caminos' },
+        { id: 12, src: 'assets/img/viajes/viajes-5.jpg', title: 'Puente de plaza de España' },
+        { id: 13, src: 'assets/img/viajes/viajes-4.jpg', title: 'Plaza de España (Sevilla)' },
+        { id: 14, src: 'assets/img/viajes/viajes-6.jpg', title: 'Senda costera' },
+        { id: 15, src: 'assets/img/viajes/viajes-7.jpg', title: 'Castillo' }
     ]
 };
 
