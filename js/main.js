@@ -41,13 +41,13 @@ document.addEventListener('DOMContentLoaded', init);
 
 //Carga inicial de la aplicación: muestra los botones de categorías.
 
-function init() {
+const init() {
     renderCategories();
 }
 
 // Genera los botones de categorías en el nav y asigna los eventos.
 
-function renderCategories() {
+const renderCategories() {
 
     const nav = document.getElementById('categories-nav');
     nav.innerHTML = '';
@@ -66,7 +66,7 @@ function renderCategories() {
 
 // Muestra la galería completa de una categoría: mensaje, imagen principal y miniaturas.
 
-function selectCategory(category) {
+const selectCategory(category) {
     const images = categoriesData[category];
     if (!images || images.length === 0) return;
 
@@ -131,7 +131,7 @@ function selectCategory(category) {
 
 // Intercambia la imagen principal con la miniatura clickeada.
 
-function swapImage(thumbImg, mainImg) {
+const swapImage(thumbImg, mainImg) {
     const tempSrc = mainImg.src;
     const tempAlt = mainImg.alt;
 
