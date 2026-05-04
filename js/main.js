@@ -1,146 +1,114 @@
+// VARIABLES
+
 /**
- * Cada categoría contiene un array de objetos con la ruta y el título de la imagen.
+ * Array de objetos con el id, la ruta, título de la imagen y tag (array de strings) para filtrar cada foto por categorías
  */
-const categoriesData = {
-    mar: [
-        { id:1, src: 'assets/img/viajes/viajes-1.jpg', title: 'Chica en una tumbona' },
-        { id:2, src: 'assets/img/viajes/viajes-2.jpg', title: 'Resort en la playa' },
-        { id:3, src: 'assets/img/viajes/viajes-6.jpg', title: 'Senda costera' }
+const categoriesData = [
+    { id: 1, src: 'assets/img/viajes/viajes-1.jpg', title: 'Chica en una tumbona', tag: ['mar', 'arena'] },
+    { id: 2, src: 'assets/img/viajes/viajes-2.jpg', title: 'Resort en la playa', tag: ['mar', 'edificio', 'cosa'] },
+    { id: 3, src: 'assets/img/viajes/viajes-3.jpg', title: 'Cruce de caminos', tag: ['señales', 'cosa'] },
+    { id: 4, src: 'assets/img/viajes/viajes-4.jpg', title: 'Plaza de España (Sevilla)', tag: ['edificio', 'cosa'] },
+    { id: 5, src: 'assets/img/viajes/viajes-5.jpg', title: 'Puente de plaza de España', tag: ['edificio', 'cosa'] },
+    { id: 6, src: 'assets/img/viajes/viajes-6.jpg', title: 'Senda costera', tag: ['mar', 'arena', 'cosa'] },
+    { id: 7, src: 'assets/img/viajes/viajes-7.jpg', title: 'Castillo', tag: ['edificio', 'cosa'] }
+];
 
-    ],
-    edificio: [
-        { id:4, src: 'assets/img/viajes/viajes-2.jpg', title: 'Resort en la playa' },
-        { id:5, src: 'assets/img/viajes/viajes-4.jpg', title: 'Plaza de España (Sevilla)' },
-        { id:6, src: 'assets/img/viajes/viajes-5.jpg', title: 'Puente de plaza de España' },
-        { id:7, src: 'assets/img/viajes/viajes-7.jpg', title: 'Castillo' }
+//Navegación donde se insertan los botones de categoría
+const nav = document.getElementById('categories-nav');
+//Contenedor principal donde se muestra la galería seleccionada
+const galleryArea = document.getElementById('gallery-area');
 
 
-    ],
-    señales: [
-        { id:8, src: 'assets/img/viajes/viajes-3.jpg', title: 'Cruces de caminos' }
-    ],
-    arena: [
-        { id:9, src: 'assets/img/viajes/viajes-1.jpg', title: 'Chica en una tumbona' }
-    ],
-    cosa: [
-        { id: 10, src: 'assets/img/viajes/viajes-2.jpg', title: 'Resort en la playa' },
-        { id: 11, src: 'assets/img/viajes/viajes-3.jpg', title: 'Cruces de caminos' },
-        { id: 12, src: 'assets/img/viajes/viajes-5.jpg', title: 'Puente de plaza de España' },
-        { id: 13, src: 'assets/img/viajes/viajes-4.jpg', title: 'Plaza de España (Sevilla)' },
-        { id: 14, src: 'assets/img/viajes/viajes-6.jpg', title: 'Senda costera' },
-        { id: 15, src: 'assets/img/viajes/viajes-7.jpg', title: 'Castillo' }
-    ]
+// FUNCIONES (deben definirse antes de usarse en los eventos)
+
+/**
+ * Extrae los tags únicos de todas las imágenes, crea un botón por cada uno
+ * y los coloca en el elemento <nav>. Cada botón permite filtrar la galería.
+ */
+const renderCategories = () => {
+    // Se obtienen todos los tags sin repetir
+    const uniqueTags = [...new Set(categoriesData.flatMap(p => p.tag))];
+
+    // Se construye el HTML de los botones
+    nav.innerHTML = uniqueTags.map(tag => `
+        <button class="category-btn" data-tag="${tag}" aria-label="Ver imágenes de ${tag}">
+            ${tag.charAt(0).toUpperCase() + tag.slice(1)}
+        </button>
+    `).join('');
+
+    // Se asigna el evento click a cada botón
+    nav.querySelectorAll('.category-btn').forEach(btn =>
+        btn.addEventListener('click', () => selectCategory(btn.dataset.tag))
+    );
+};
+
+/**
+ * Muestra todas las imágenes que contienen el tag indicado.
+ * Se inserta un botón para volver, un mensaje con el número de imágenes,
+ * una imagen principal y las miniaturas con sus títulos.
+ * 
+ */
+const selectCategory = (tag) => {
+    // Filtra las imágenes que incluyen el tag
+    const images = categoriesData.filter(p => p.tag.includes(tag));
+    if (!images.length) return;
+
+    const [firstImage] = images; // Primera imagen se usa como principal
+
+    // Se reemplaza el contenido del área de la galería
+    galleryArea.innerHTML = `
+        <button class="back-btn">← Volver a categorías</button>
+        <p class="category-message">Se han encontrado ${images.length} imágenes con el tag '${tag}'</p>
+        <div class="gallery">
+            <img class="main-image" src="${firstImage.src}" alt="${firstImage.title}">
+            <div class="thumbnails">
+                ${images.map(({ src, title }) => `
+                    <div class="thumb-wrapper">
+                        <p class="thumb-title">${title}</p>
+                        <img class="thumb-img" src="${src}" alt="${title}" data-full-src="${src}" data-full-title="${title}">
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+
+    // Evento para el botón volver
+    galleryArea.querySelector('.back-btn').addEventListener('click', () => {
+        galleryArea.innerHTML = '';
+    });
+
+    // Evento para cada miniatura: intercambia con la imagen principal
+    const mainImg = galleryArea.querySelector('.main-image');
+    galleryArea.querySelectorAll('.thumb-img').forEach(thumb =>
+        thumb.addEventListener('click', () => swapImage(thumb, mainImg))
+    );
+};
+
+/**
+ * Intercambia la imagen principal con la miniatura clicada,
+ * tanto en su atributo src/alt como en los datos almacenados en dataset.
+ * 
+ */
+const swapImage = (thumb, main) => {
+    // Guarda temporalmente los valores de la imagen principal
+    const tempSrc = main.src;
+    const tempAlt = main.alt;
+    const tempFullSrc = thumb.dataset.fullSrc;
+    const tempFullTitle = thumb.dataset.fullTitle;
+
+    // Intercambia la imagen principal con los datos de la miniatura
+    main.src = tempFullSrc;
+    main.alt = tempFullTitle;
+
+    // Actualiza la miniatura con los antiguos valores de la principal
+    thumb.dataset.fullSrc = tempSrc;
+    thumb.dataset.fullTitle = tempAlt;
+    thumb.src = tempSrc;
+    thumb.alt = tempAlt;
 };
 
 
+// EVENTOS (se registran después de que las funciones hayan sido definidas)
 
-// Arrancar la app cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', init);
-
-
-
-//Carga inicial de la aplicación: muestra los botones de categorías.
-
-const init() {
-    renderCategories();
-}
-
-// Genera los botones de categorías en el nav y asigna los eventos.
-
-const renderCategories() {
-
-    const nav = document.getElementById('categories-nav');
-    nav.innerHTML = '';
-
-    const categoryNames = Object.keys(categoriesData);
-
-    categoryNames.forEach(category => {
-        const btn = document.createElement('button');
-        btn.className = 'category-btn';
-        btn.textContent = category.charAt(0).toUpperCase() + category.slice(1);
-        btn.setAttribute('aria-label', `Ver imágenes de ${category}`);
-        btn.addEventListener('click', () => selectCategory(category));
-        nav.appendChild(btn);
-    });
-}
-
-// Muestra la galería completa de una categoría: mensaje, imagen principal y miniaturas.
-
-const selectCategory(category) {
-    const images = categoriesData[category];
-    if (!images || images.length === 0) return;
-
-    const mainArea = document.getElementById('gallery-area');
-    mainArea.innerHTML = '';
-
-    // Botón "Volver"
-    const backBtn = document.createElement('button');
-    backBtn.className = 'back-btn';
-    backBtn.textContent = '← Volver a categorías';
-    backBtn.addEventListener('click', () => {
-        mainArea.innerHTML = '';
-    });
-    mainArea.appendChild(backBtn);
-
-    // Mensaje informativo
-    const message = document.createElement('p');
-    message.className = 'category-message';
-    message.textContent = `Se han encontrado ${images.length} imágenes con el tag '${category}'`;
-    mainArea.appendChild(message);
-
-    // Contenedor de la galería
-    const galleryDiv = document.createElement('div');
-    galleryDiv.className = 'gallery';
-
-    // Imagen principal (centrada)
-    const mainImg = document.createElement('img');
-    mainImg.className = 'main-image';
-    mainImg.src = images[0].src;
-    mainImg.alt = images[0].title;
-    galleryDiv.appendChild(mainImg);
-
-    // Contenedor de miniaturas
-    const thumbsContainer = document.createElement('div');
-    thumbsContainer.className = 'thumbnails';
-
-    // Agregar todas las imágenes como miniaturas (incluida la primera)
-    images.forEach((imgData, index) => {
-        const thumbWrapper = document.createElement('div');
-        thumbWrapper.className = 'thumb-wrapper';
-
-        const titleEl = document.createElement('p');
-        titleEl.className = 'thumb-title';
-        titleEl.textContent = imgData.title;
-
-        const thumb = document.createElement('img');
-        thumb.className = 'thumb-img';
-        thumb.src = imgData.src;
-        thumb.alt = imgData.title;
-        thumb.dataset.fullSrc = imgData.src;
-        thumb.dataset.fullTitle = imgData.title;
-        thumb.addEventListener('click', () => swapImage(thumb, mainImg));
-
-        thumbWrapper.appendChild(titleEl);
-        thumbWrapper.appendChild(thumb);
-        thumbsContainer.appendChild(thumbWrapper);
-    });
-
-    galleryDiv.appendChild(thumbsContainer);
-    mainArea.appendChild(galleryDiv);
-}
-
-// Intercambia la imagen principal con la miniatura clickeada.
-
-const swapImage(thumbImg, mainImg) {
-    const tempSrc = mainImg.src;
-    const tempAlt = mainImg.alt;
-
-    mainImg.src = thumbImg.dataset.fullSrc;
-    mainImg.alt = thumbImg.dataset.fullTitle;
-
-    thumbImg.dataset.fullSrc = tempSrc;
-    thumbImg.dataset.fullTitle = tempAlt;
-    thumbImg.src = tempSrc;
-    thumbImg.alt = tempAlt;
-}
-
+// Al cargar el DOM se generan los botones de categoría.
+document.addEventListener('DOMContentLoaded', renderCategories);
