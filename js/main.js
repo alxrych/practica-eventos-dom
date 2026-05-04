@@ -32,6 +32,13 @@ const categoriesData = {
     ]
 };
 
+
+
+// Arrancar la app cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', init);
+
+
+
 //Carga inicial de la aplicación: muestra los botones de categorías.
 
 function init() {
@@ -137,5 +144,3 @@ function swapImage(thumbImg, mainImg) {
     thumbImg.alt = tempAlt;
 }
 
-// Arrancar la app cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', init);
